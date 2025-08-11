@@ -98,7 +98,7 @@ LIC_FILES_CHKSUM = " \
     file://gst/replaygain/rganalysis.c;beginline=1;endline=23;md5=b60ebefd5b2f5a8e0cab6bfee391a5fe \
 "
 # Enable pulsesink in gstreamer
-PACKAGECONFIG:append = "${@bb.utils.contains('DISTRO_FEATURES', 'pulseaudio', ' pulseaudio', '', d)}"
+PACKAGECONFIG:append = " pulseaudio"
 
 # fb implementation of v4l2 uses libdrm
 DEPENDS += "${@bb.utils.contains('PACKAGECONFIG', 'v4l2', '${DEPENDS_V4L2}', '', d)}"
@@ -111,10 +111,10 @@ SRC_URI:remove = "https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plu
 
 SRC_URI:prepend = "${GST1.0-PLUGINS-GOOD_SRC};branch=${SRCBRANCH} "
 GST1.0-PLUGINS-GOOD_SRC ?= "gitsm://github.com/nxp-imx/gst-plugins-good.git;protocol=https"
-SRCBRANCH = "MM_04.09.03_2412_L6.12.y"
-SRCREV = "626a972e9ef448f1017cfad07a3486a0fb340a0d"
+SRCBRANCH = "MM_04.10.0_2505_L6.12.20"
+SRCREV = "6a0df1aee0ef2477dbacedd79df08c5bcb648e55"
 
-S = "${UNPACKDIR}/${BP}"
+S = "${WORKDIR}/git"
 
 COMPATIBLE_MACHINE = "(imx-nxp-bsp)"
 

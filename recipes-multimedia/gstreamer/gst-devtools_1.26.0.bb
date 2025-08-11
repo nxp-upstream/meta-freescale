@@ -6,13 +6,13 @@ SECTION = "multimedia"
 LICENSE = "LGPL-2.1-or-later"
 LIC_FILES_CHKSUM = "file://validate/COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343"
 
-S = "${WORKDIR}/gst-devtools-1.22.5"
+#S = "${WORKDIR}/gst-devtools-${PV}"
 
-SRC_URI = "https://gstreamer.freedesktop.org/src/gst-devtools/gst-devtools-1.22.5.tar.xz \
+SRC_URI = "https://gstreamer.freedesktop.org/src/gst-devtools/gst-devtools-${PV}.tar.xz \
            file://0001-connect-has-a-different-signature-on-musl.patch \
            "
 
-SRC_URI[sha256sum] = "2add1519aa6eeb01d544cb94293688ee3bc2079f6bca6075bf5c23d00a0921be"
+SRC_URI[sha256sum] = "eff33d7dc292bb074a2788ea887b6283398ffdefafa49fb7d08efe6658a65648"
 
 DEPENDS = "json-glib glib-2.0 glib-2.0-native gstreamer1.0 gstreamer1.0-plugins-base"
 RRECOMMENDS:${PN} = "git"

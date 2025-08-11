@@ -7,18 +7,17 @@ SECTION = "multimedia"
 LICENSE = "LGPL-2.1-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=c34deae4e395ca07e725ab0076a5f740"
 
-SRC_URI = "\
-    https://gstreamer.freedesktop.org/src/${PNREAL}/${PNREAL}-${@get_gst_ver("${PV}")}.tar.xz \
-    file://0001-meson.build-Fix-missing-python_opt.patch \
-    "
-SRC_URI[sha256sum] = "041c2255c1ea9936c777dcb08a36ecaa6a24a69a12fc46ef53f1530d46c59f9d"
+SRC_URI = "https://gstreamer.freedesktop.org/src/${PNREAL}/${PNREAL}-${PV}.tar.xz"
+SRC_URI[sha256sum] = "e5046a05d77abb15671ad01cd1908d17d62e5a06f5d7841be4342ade2a3fb8db"
 
 DEPENDS = "gstreamer1.0 gstreamer1.0-plugins-base python3-pygobject"
+DEPENDS:append = " gstreamer1.0-plugins-bad"
+
 RDEPENDS:${PN} += "gstreamer1.0 gstreamer1.0-plugins-base python3-pygobject"
 
 PNREAL = "gst-python"
 
-S = "${UNPACKDIR}/${PNREAL}-${@get_gst_ver('${PV}')}"
+S = "${WORKDIR}/${PNREAL}-${PV}"
 
 EXTRA_OEMESON += "\
     -Dtests=disabled \
@@ -27,10 +26,6 @@ EXTRA_OEMESON += "\
 "
 
 inherit meson pkgconfig setuptools3-base upstream-version-is-even features_check
-
-# Drop .imx from PV
-def get_gst_ver(v):
-    return oe.utils.trim_version(v, 3)
 
 FILES:${PN} += "${libdir}/gstreamer-1.0"
 
