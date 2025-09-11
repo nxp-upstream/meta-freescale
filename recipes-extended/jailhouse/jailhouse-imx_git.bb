@@ -2,7 +2,6 @@ SUMMARY = "Jailhouse, i.MX fork"
 HOMEPAGE = "https://github.com/siemens/jailhouse"
 SECTION = "jailhouse"
 LICENSE = "GPL-2.0-only"
-
 LIC_FILES_CHKSUM = "file://COPYING;md5=9fa7f895f96bde2d47fd5b7d95b6ba4d \
                  file://tools/root-cell-config.c.tmpl;beginline=6;endline=33;md5=2825581c1666c44a17955dc574cfbfb3 \
                  file://include/jailhouse/hypercall.h;beginline=9;endline=36;md5=2825581c1666c44a17955dc574cfbfb3 \
@@ -12,28 +11,20 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=9fa7f895f96bde2d47fd5b7d95b6ba4d \
                  file://include/arch/x86/asm/jailhouse_hypercall.h;beginline=9;endline=36;md5=2825581c1666c44a17955dc574cfbfb3 \
                  file://driver/jailhouse.h;beginline=9;endline=36;md5=2825581c1666c44a17955dc574cfbfb3 \
 "
+DEPENDS = "dtc-native make-native python3-mako-native python3-mako"
 
 PROVIDES = "jailhouse"
-RPROVIDES:${PN} += "jailhouse"
-
-SRCBRANCH = "lf-6.12.20_2.0.0"
-SRCREV = "399d65450e9a377b4aaff4b0627619174e1c8c46"
 
 PV = "2023.03+git${SRCPV}"
 
-IMX_JAILHOUSE_SRC ?= "git://github.com/nxp-imx/imx-jailhouse.git;protocol=https"
 SRC_URI = "${IMX_JAILHOUSE_SRC};branch=${SRCBRANCH} \
            file://arm-arm64-Makefile-Remove-march-option-from-Makefile.patch \
            file://0001-YOCIMX-9281-1-Fix-gcc15-errors.patch \
            file://0002-YOCIMX-9281-2-hypervisor-arm64-fix-strh-usage.patch \
           "
-
-DEPENDS = " \
-    make-native \
-    python3-mako-native \
-    python3-mako \
-    dtc-native \
-"
+IMX_JAILHOUSE_SRC ?= "git://github.com/nxp-imx/imx-jailhouse.git;protocol=https"
+SRCBRANCH = "lf-6.12.3_1.0.0"
+SRCREV = "a68ba027402013ae444544d33ae676ddce9a6bbf"
 
 inherit module bash-completion deploy setuptools3
 
@@ -59,10 +50,9 @@ EXTRA_OEMAKE += 'INSTALL_MOD_PATH=${D}${root_prefix}'
 EXTRA_OEMAKE += 'firmwaredir=${nonarch_base_libdir}/firmware'
 
 do_configure:prepend() {
-   if [ -d ${STAGING_DIR_HOST}/${CELLCONF_DIR} ];
-   then
-      cp "${STAGING_DIR_HOST}/${CELLCONF_DIR}/"*.c ${S}/configs/${ARCH}/
-   fi
+    if [ -d ${STAGING_DIR_HOST}/${CELLCONF_DIR} ]; then
+        cp "${STAGING_DIR_HOST}/${CELLCONF_DIR}/"*.c ${S}/configs/${ARCH}/
+    fi
 }
 
 do_compile:prepend() {
@@ -94,15 +84,15 @@ PACKAGE_BEFORE_PN = "pyjailhouse"
 FILES:${PN} += "${nonarch_base_libdir}/firmware ${libexecdir} ${sbindir} ${JH_DATADIR}"
 # Remove libdir/* appended by setuptools3-base.bbclass for module split to work correctly
 FILES:${PN}:remove = "${libdir}/*"
-FILES:pyjailhouse = "${PYTHON_SITEPACKAGES_DIR}"
-
 RDEPENDS:${PN} += " \
     pyjailhouse \
     python3-curses \
     python3-datetime \
     python3-mmap \
 "
+RPROVIDES:${PN} += "jailhouse"
 
+FILES:pyjailhouse = "${PYTHON_SITEPACKAGES_DIR}"
 RDEPENDS:pyjailhouse = " \
     python3-core \
     python3-ctypes \
