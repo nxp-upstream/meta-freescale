@@ -23,8 +23,8 @@ SRC_URI = "${IMX_JAILHOUSE_SRC};branch=${SRCBRANCH} \
            file://0002-YOCIMX-9281-2-hypervisor-arm64-fix-strh-usage.patch \
           "
 IMX_JAILHOUSE_SRC ?= "git://github.com/nxp-imx/imx-jailhouse.git;protocol=https"
-SRCBRANCH = "lf-6.12.3_1.0.0"
-SRCREV = "a68ba027402013ae444544d33ae676ddce9a6bbf"
+SRCBRANCH = "lf-6.12.20_2.0.0"
+SRCREV = "399d65450e9a377b4aaff4b0627619174e1c8c46"
 
 inherit module bash-completion deploy setuptools3
 
