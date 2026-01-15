@@ -29,28 +29,7 @@ do_compile:append() {
                 j=$(expr $j + 1);
                 if [ "${type}" = "sd" ] && [ "${j}" = "${i}" ]; then
                     uboot_image="${UBOOT_BINARYNAME}-sd.${UBOOT_SUFFIX}"
-                    if [ ${@bb.utils.filter('NXP_SECURE_BOOT_TYPE', 'ahab', d)} ]; then
-                        cfgfile="sign.cfg"
-                    elif [ -e "${SIG_DATA_PATH}/csf_hab4.cfg" ]; then
-                        cfgfile="${SIG_DATA_PATH}/csf_hab4.cfg"
-                    else
-                        cfgfile="${STAGING_DIR_NATIVE}${datadir}/nxp-imx-signer/csf_hab4.cfg.sample"
-                    fi
-                    bbnote SIG_TOOL_PATH=${NXP_SECURE_BOOT_SIGNING_TOOL} \
-                        SIG_DATA_PATH=${NXP_SECURE_BOOT_SIGNING_DATA} \
-                        imx_signer -d \
-                        -i ${config}-sd/$uboot_image \
-                        -c $cfgfile
-                    SIG_TOOL_PATH=${NXP_SECURE_BOOT_SIGNING_TOOL} \
-                        SIG_DATA_PATH=${NXP_SECURE_BOOT_SIGNING_DATA} \
-                        imx_signer -d \
-                        -i ${config}-sd/$uboot_image \
-                        -c $cfgfile
-                    if [ ! -e "signed-$uboot_image" ]; then
-                        bbfatal 'Signed image missing after signing operation'
-                    fi
-                    rm ${config}-sd/$uboot_image
-                    mv signed-$uboot_image ${config}-sd/$uboot_image
+                    do_sign_image ${config}-sd $uboot_image
                     break 2
                 fi
             done
