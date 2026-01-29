@@ -1,12 +1,14 @@
 inherit nxp-secure-boot
 
-DEPENDS += "u-boot-imx"
+DEPENDS += " \
+    u-boot-imx \
+    ${@bb.utils.contains('NXP_SECURE_BOOT_TYPE', 'ahab', 'u-boot-mkimage-native', '', d)}"
 
 do_sign_image_ahab() {
     bbnote "Signing for AHAB"
 }
 
-do_sign_image_hab() {
+do_sign_image_hab4() {
     path=${KERNEL_OUTPUT_DIR}
     image=${KERNEL_IMAGETYPE}
 
@@ -58,8 +60,8 @@ do_compile:append() {
     ahab)
         do_sign_image_ahab
         ;;
-    hab)
-        do_sign_image_hab
+    hab4)
+        do_sign_image_hab4
         ;;
     *)
         bbfatal "Unknown NXP_SECURE_BOOT_TYPE value is \"${NXP_SECURE_BOOT_TYPE}\""

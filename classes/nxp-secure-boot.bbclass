@@ -7,10 +7,10 @@ PACKAGECONFIG_NXP_SECURE_BOOT_SIGNING_TOOL ??= \
 PACKAGECONFIG[cst] = ",,,,,spsdk"
 PACKAGECONFIG[spsdk] = ",,,,,cst"
 
-NXP_SECURE_BOOT_TYPE:mx6-generic-bsp  = "hab"
-NXP_SECURE_BOOT_TYPE:mx7-generic-bsp  = "hab"
+NXP_SECURE_BOOT_TYPE:mx6-generic-bsp  = "hab4"
+NXP_SECURE_BOOT_TYPE:mx7-generic-bsp  = "hab4"
 NXP_SECURE_BOOT_TYPE:mx8-generic-bsp  = "ahab"
-NXP_SECURE_BOOT_TYPE:mx8m-generic-bsp = "hab"
+NXP_SECURE_BOOT_TYPE:mx8m-generic-bsp = "hab4"
 NXP_SECURE_BOOT_TYPE:mx9-generic-bsp  = "ahab"
 
 NXP_SECURE_BOOT_SIGNING_TOOL ?= ""
@@ -20,18 +20,20 @@ python() {
     import os
     import bb
     # Set NXP_SECURE_BOOT_TYPE_CFGFILE
-    if bb.utils.filter('NXP_SECURE_BOOT_TYPE', 'ahab', d):
-        cfgfile = 'sign.cfg'
+    signing_tool = d.getVar('PACKAGECONFIG_NXP_SECURE_BOOT_SIGNING_TOOL')
+    if signing_tool == "cst":
+        cfgfile_name = "csf"
     else:
-        sig_data_path = d.getVar('SIG_DATA_PATH') or ''
-        hab_cfg = os.path.join(sig_data_path, 'csf_hab4.cfg')
-        if os.path.exists(hab_cfg):
-            cfgfile = hab_cfg
-        else:
-            staging_native = d.getVar('STAGING_DIR_NATIVE') or ''
-            datadir = d.getVar('datadir') or ''
-            cfgfile = os.path.join(staging_native, datadir.lstrip('/'),
-                                   'nxp-imx-signer', 'csf_hab4.cfg.sample')
+        cfgfile_name = signing_tool
+    cfgfile_name += "_" + d.getVar('NXP_SECURE_BOOT_TYPE') + ".cfg"
+    sig_data_path = d.getVar('SIG_DATA_PATH') or ''
+    cfgfile = os.path.join(sig_data_path, cfgfile_name)
+    if not os.path.exists(cfgfile):
+        cfgfile_name += ".sample"
+        staging_dir_native = d.getVar('STAGING_DIR_NATIVE') or ''
+        datadir = d.getVar('datadir') or ''
+        cfgfile = os.path.join(staging_dir_native, datadir.lstrip('/'),
+                               'nxp-imx-signer', cfgfile_name)
     d.setVar('NXP_SECURE_BOOT_CFGFILE', cfgfile)
 }
 

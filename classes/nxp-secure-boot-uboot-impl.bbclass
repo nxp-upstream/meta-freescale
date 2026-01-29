@@ -3,7 +3,7 @@ inherit nxp-secure-boot
 do_configure:append() {
     case ${NXP_SECURE_BOOT_TYPE} in
     ahab) kconfig_option=CONFIG_AHAB_BOOT;;
-     hab) kconfig_option=CONFIG_IMX_HAB;;
+    hab4) kconfig_option=CONFIG_IMX_HAB;;
        *) echo bbfatal "Unknown NXP_SECURE_BOOT_TYPE value is \"${NXP_SECURE_BOOT_TYPE}\"";;
     esac
     unset i j
@@ -21,7 +21,7 @@ do_configure:append() {
 }
 
 do_compile:append() {
-    if [ ${@bb.utils.filter('NXP_SECURE_BOOT_TYPE', 'hab', d)} ]; then
+    if [ ${@bb.utils.filter('NXP_SECURE_BOOT_TYPE', 'hab4', d)} ]; then
         unset i j
         for config in ${UBOOT_MACHINE}; do
             i=$(expr $i + 1);
@@ -40,7 +40,7 @@ do_compile:append() {
 do_deploy:append() {
     # FIXME: Someone is not honoring the defined CWD for this function, so set it manually
     cd ${B}
-    if [ ${@bb.utils.filter('NXP_SECURE_BOOT_TYPE', 'hab', d)} ]; then
+    if [ ${@bb.utils.filter('NXP_SECURE_BOOT_TYPE', 'hab4', d)} ]; then
         unset i j
         for config in ${UBOOT_MACHINE}; do
             i=$(expr $i + 1)
