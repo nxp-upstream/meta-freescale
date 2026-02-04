@@ -16,6 +16,8 @@ SRCBRANCH = "lf-6.12.y"
 LOCALVERSION = "-6.12.20-2.0.0"
 SRCREV = "dfaf2136deb2af2e60b994421281ba42f1c087e0"
 
+inherit nxp-secure-boot-linux
+
 # PV is defined in the base in linux-imx.inc file and uses the LINUX_VERSION definition
 # required by kernel-yocto.bbclass.
 #
